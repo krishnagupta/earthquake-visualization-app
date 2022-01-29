@@ -32,10 +32,10 @@ const Map: FC = () => {
       <GoogleMapReact
         bootstrapURLKeys={{ key }}
         defaultCenter={{
-          lat: 59.95,
-          lng: 30.33,
+          lat: 38.4161,
+          lng: 63.6167,
         }}
-        defaultZoom={5}
+        defaultZoom={2}
         onGoogleApiLoaded={({map, maps}) => renderMarkers(map, maps)}
         yesIWantToUseGoogleMapApiInternals
       >
