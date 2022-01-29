@@ -1,19 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import GoogleMapReact from "google-map-react";
-import Marker from "./Marker";
 import { getEarthQuakeData } from "../../Services/getEarthQuakeData";
-
-interface IEarthQuakeData {
-  geometry: {
-    coordinates: Array<number>;
-  };
-  id: string;
-  properties: {
-    title: string;
-    place: string;
-    detail: string;
-  };
-}
+import { IEarthQuakeData } from './models'
 
 const Map: FC = () => {
   const [earthQuakeData, setEarthQuakeData] = useState<IEarthQuakeData[]>([]);
@@ -27,6 +15,18 @@ const Map: FC = () => {
     getData();
   }, []);
 
+  const renderMarkers = (map: any, maps: any) => {
+    earthQuakeData.length &&
+          earthQuakeData.map((data) => {
+            const title = data.properties.title
+              return  new maps.Marker({
+                position: { lat: data.geometry.coordinates[0], lng: data.geometry.coordinates[1]},
+                map,
+                title,
+                });
+          })
+   };
+
   return (
     <div style={{ height: "100vh", width: "100%" }}>
       <GoogleMapReact
@@ -35,18 +35,10 @@ const Map: FC = () => {
           lat: 59.95,
           lng: 30.33,
         }}
-        defaultZoom={10}
+        defaultZoom={5}
+        onGoogleApiLoaded={({map, maps}) => renderMarkers(map, maps)}
+        yesIWantToUseGoogleMapApiInternals
       >
-        {earthQuakeData.length &&
-          earthQuakeData.map((data) => {
-              return (
-                <Marker
-                  key={data.id}
-                  lat={data.geometry.coordinates[0]}
-                  lng={data.geometry.coordinates[1]}
-                />
-              );
-          })}
       </GoogleMapReact>
     </div>
   );
